@@ -2,14 +2,14 @@
 #                                                              #
 # RCX.pm                                                       #
 #                                                              #
-# Version 1.00                                                 #
+# Version 1.01                                                 #
 #                                                              #
 # (c) 2000 John C. Quillan, All rights reserved                #
 #                                                              #
 # This program is free softeware, you can redistribute it      #
 # and/or modify it under the same terms as Perl itself         #
 #                                                              #
-# If something doesn't work, email me quillan@doitnow.com      #
+# If something doesn't work, email me quillan@cox.net          #
 #                                                              #
 # Special Thanks to:                                           #
 #                                                              #
@@ -24,7 +24,7 @@ package LEGO::RCX;
 use FileHandle;
 use POSIX qw( :termios_h );
 
-$VERSION = "1.00";
+$VERSION = "1.01";
 
 @ISA = qw( Exporter );
 use strict;
@@ -1346,7 +1346,7 @@ I have developed this software under Linux.  I know it works there.
 
 =head1 AUTHORS
 
-John C. Quillan quillan@doitnow.com
+John C. Quillan quillan@cox.net
 
 =head1 MODIFICATION HISTORY
 
