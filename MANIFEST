@@ -5,3 +5,6 @@ README
 ARTISTIC
 COPYING
 DOCS
+TODO
+samples/beep.PL
+samples/motor.PL

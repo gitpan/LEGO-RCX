@@ -2,7 +2,7 @@
 #                                                              #
 # RCX.pm                                                       #
 #                                                              #
-# Version 0.9                                                  #
+# Version 1.00                                                 #
 #                                                              #
 # (c) 2000 John C. Quillan, All rights reserved                #
 #                                                              #
@@ -24,7 +24,7 @@ package LEGO::RCX;
 use FileHandle;
 use POSIX qw( :termios_h );
 
-$VERSION = "0.9";
+$VERSION = "1.00";
 
 @ISA = qw( Exporter );
 use strict;
@@ -117,17 +117,15 @@ $SENSOR_PULSE      = 5;
 $SENSOR_EDGE       = 6;
 
 use vars qw( $O_FH $O_FLIP  $O_NQC_VAR $O_NQC_TASK $O_NQC_SUB
-             $O_COMM_TIMEOUT  $O_UPLD_SZ );
+             $O_COMM_TIMEOUT  $O_UPLD_SZ  $O_IS_ALIVE  );
 ( $O_FH, $O_FLIP, $O_NQC_VAR, $O_NQC_TASK, $O_NQC_SUB,
-  $O_COMM_TIMEOUT, $O_UPLD_SZ ) = ( 0 .. 6 );
+  $O_COMM_TIMEOUT, $O_UPLD_SZ, $O_IS_ALIVE ) = ( 0 .. 7 );
 
 
 sub new
 {
    my $class = shift;
-   #
-   ## TODO Should take args of tty later
-   #
+
    my ( $port ) = @_;
 
    if( ! defined $port ) {
@@ -137,12 +135,15 @@ sub new
    my $this = [];
 
 
-   ## TODO Need to var the serial port
-   ## TODO Need to find a way to make it portable and set speed/etc
-
+   #
+   # Open the serial port
+   #
    local *RCX;
-   open( RCX, "+< $port" ) || die "Cant open serisl";
+   open( RCX, "+< $port" ) || die "Cant open serial";
 
+   #
+   # Set up the serial ports paramaters
+   #
    my $termios = new POSIX::Termios();
 
    $termios->getattr( fileno( RCX ) );
@@ -165,7 +166,13 @@ sub new
 
    $this->[  $O_UPLD_SZ ] = 1;  # NOT USED YET
 
+   $this->[ $O_IS_ALIVE ] = 0;
+
    bless $this, $class;
+
+   $this->alive();
+
+   return $this;
 }
 
 #
@@ -226,7 +233,7 @@ sub transactCommand
       
 
 
-      ## TODO  Need to check opcodne here
+      ## TODO  Need to check opcode here
 
       $retData =~ s/^.....//s;  # Strip off header and op code
       $retData =~ s/..$//s;     # Strip off checksum
@@ -243,6 +250,10 @@ sub emit
 {
    my $this = shift;
    my ( $byteCode, $resp_len, $resp_code ) = @_;
+
+   if( ! $this->[ $O_IS_ALIVE ] && $byteCode->[ 0 ] != 0x10 ) {
+      $this->alive();
+   }
 
    #
    # Unlike the tcl version of this library there is only a
@@ -830,7 +841,10 @@ sub ping
 
    my $this = shift;
 
-   return $this->emit( [ 0x10 ], 1 );
+   my $ret = $this->emit( [ 0x10 ], 1 );
+   $this->[ $O_IS_ALIVE ] = ( defined $ret ) ? 1 : 0;
+
+   return $ret
 
 
 }
@@ -983,9 +997,9 @@ RCX
 
 =head1 SYNOPSIS
 
-   use RCX;
+   use LOGO::RCX;
 
-   $rcx = new RCX();
+   $rcx = new LEGO::RCX();
 
    #
    # Turn motor A on for 10 seconds, then turn
@@ -1360,3 +1374,10 @@ John C. Quillan quillan@doitnow.com
                         Fixed bug in pattern matches that was not catching
                          0x0a characters.  Now a single line match.
 
+ 04/16/2000   VER 1.00  Clean up source a little bit.
+                        Made README more descriptive for CPAN users.
+                        Fixed some typo in the pod documentation for the
+                         usage. Sorry for any problems this may have
+                         caused.
+                        Fixed a typo in the warning.
+                        Added a few samples to start off with

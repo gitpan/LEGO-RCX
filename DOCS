@@ -2,9 +2,9 @@ NAME
     RCX
 
 SYNOPSIS
-       use RCX;
+       use LOGO::RCX;
 
-       $rcx = new RCX();
+       $rcx = new LEGO::RCX();
 
        #
        # Turn motor A on for 10 seconds, then turn
@@ -317,3 +317,10 @@ MODIFICATION HISTORY
                             Fixed bug in pattern matches that was not catching
                              0x0a characters.  Now a single line match.
 
+     04/16/2000   VER 1.00  Clean up source a little bit.
+                            Made README more descriptive for CPAN users.
+                            Fixed some typo in the pod documentation for the
+                             usage. Sorry for any problems this may have
+                             caused.
+                            Fixed a typo in the warning.
+                            Added a few samples to start off with
