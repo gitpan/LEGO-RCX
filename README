@@ -1,0 +1,25 @@
+This is just a quick readme to get you started.
+
+The DOCS file contains the documentation for this package.  It 
+however is generated from the pod in the perl source so any
+modifications should be made there.
+
+Install:
+
+Option 1:
+  perl Makefile.PL
+
+  make install
+
+Option 2:
+  Copy this to any location, make sure your perl can find it and
+  follow the documentation.
+
+Bugs:
+
+Any bug reports please email quillan@doitnow.com.  If you have any
+feature suggestions or other ideas please let me know as well.
+
+
+
+
